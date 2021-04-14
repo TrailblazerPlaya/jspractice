@@ -128,6 +128,54 @@ window.addEventListener('DOMContentLoaded', () => {
 
         }      
     }
-
     setClock('.timer', deadline); //вызвали функцию и назначили селекторы
+
+
+
+
+    /*Modal*////////////
+    const modalTrigger = document.querySelectorAll('[data-modal]'),
+          modal = document.querySelector('.modal'),
+          modalClose = document.querySelector('[data-close]');
+    //МЫ НЕ МОЖЕМ НА МАССИВ НАВЕСИТЬ ОБРАБОТЧИК СОБЫТИЯ!!!ЗАПОМНИТЬ!!!
+    modalTrigger.forEach(btn => {
+        btn.addEventListener('click', () => {
+            //Вариант 1//
+            modal.classList.add('show');
+            modal.classList.remove('hide');
+    
+            //Вариант 2//
+            // modal.classList.toggle('show');
+    
+            document.body.style.overflow = 'hidden';
+        });
+    });
+      
+
+    function closeModal() {
+         //Вариант 1//
+         modal.classList.add('hide');
+         modal.classList.remove('show');
+ 
+         //Вариант 2//
+         // modal.classList.toggle('show');
+ 
+         document.body.style.overflow = '';
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    
+    
+    //Закрытие модального окна по подложке
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.code === "Escape" && modal.classList.contains('show')) {
+            closeModal();
+        }
+    });
 });

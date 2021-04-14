@@ -139,18 +139,22 @@ window.addEventListener('DOMContentLoaded', () => {
           modalClose = document.querySelector('[data-close]');
     //МЫ НЕ МОЖЕМ НА МАССИВ НАВЕСИТЬ ОБРАБОТЧИК СОБЫТИЯ!!!ЗАПОМНИТЬ!!!
     modalTrigger.forEach(btn => {
-        btn.addEventListener('click', () => {
-            //Вариант 1//
-            modal.classList.add('show');
-            modal.classList.remove('hide');
-    
-            //Вариант 2//
-            // modal.classList.toggle('show');
-    
-            document.body.style.overflow = 'hidden';
-        });
+        btn.addEventListener('click', openModal);
     });
-      
+    
+    function openModal() {
+        //Вариант 1//
+        modal.classList.add('show');
+        modal.classList.remove('hide');
+
+        //Вариант 2//
+        // modal.classList.toggle('show');
+
+        document.body.style.overflow = 'hidden';
+
+        clearInterval(modalTimerId);//Если пользователь то таймера уже открывал модальное окно, чтобы не бесить его мы отчищаем функцию и она больше самостоятельно не появится
+    }
+
 
     function closeModal() {
          //Вариант 1//
@@ -178,4 +182,16 @@ window.addEventListener('DOMContentLoaded', () => {
             closeModal();
         }
     });
+
+
+    const modalTimerId = setTimeout(openModal, 5000);
+
+    function showModalByScroll() {
+        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+            openModal();
+            window.removeEventListener('scroll', showModalByScroll);
+        }
+    }
+
+    window.addEventListener('scroll', showModalByScroll);
 });

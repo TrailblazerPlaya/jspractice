@@ -152,7 +152,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         document.body.style.overflow = 'hidden';
 
-        clearInterval(modalTimerId);//Если пользователь то таймера уже открывал модальное окно, чтобы не бесить его мы отчищаем функцию и она больше самостоятельно не появится
+        clearInterval(modalTimerId);//Если пользователь до таймера уже открывал модальное окно, чтобы не бесить его мы отчищаем функцию и она больше самостоятельно не появится
     }
 
 
@@ -184,7 +184,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // const modalTimerId = setTimeout(openModal, 5000);
+    const modalTimerId = setTimeout(openModal, 5000);
 
     function showModalByScroll() {
         if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
@@ -272,4 +272,64 @@ window.addEventListener('DOMContentLoaded', () => {
         '.menu .container',
         'menu__item'
     ).render();
+
+
+    /*Forms*////////////
+    
+    const forms = document.querySelectorAll('form');
+
+    const message = {
+        loading: 'Загружается',
+        success: 'Спасибо, скоро свяжемся',
+        failure: 'Что-то пошло не так'
+    };
+
+    //Подвязываем формы к функции postData
+    forms.forEach(item => {
+        postData(item);
+    });
+
+
+    function postData(form) {
+        form.addEventListener('submit', (e) => {//submit работает тогда, когда мы пытаемся отправить какую-то форму
+            e.preventDefault(); //Отменяю стандартное поведение браузера, так как после нажатия на кнопку с классом сабмит, страница перезагружается(стандартное поведение браузера)
+
+            //Создам новую константу, чтобы выводить сообщение статуса
+            const statusMessage = document.createElement('div');
+            statusMessage.classList.add('status');
+            statusMessage.textContent = message.loading;  
+            form.append(statusMessage);
+
+
+
+            const request = new XMLHttpRequest();
+            request.open('POST', 'server.php');//сначала всегда вызывается метод open, чтобы настроить этот запрос. во внутрь помещаем нужные данные
+
+            /**Заголовки, которые будут говорить серверу что именно приходит */
+            // request.setRequestHeader('Content-type', 'multipart/form-data'); /*Если посмотреть на документацию FormData, там требуется эта multipart/form-data */
+            /*КОГДА МЫ ИСПОЛЬЗУЕМ СВЯЗКУ XMLHTTPREQUEST С FORMDATA НАМ ЗАГОЛОВОК УСТАНАВЛИВАТЬ НЕ НУЖНО, ОН УСТАНАВЛИВАЕТСЯ АВТОМАТИЧЕСКИ!!!!!! ЗАПОМНИТЬ, ИНАЧЕ БУДЕТ МНОГО ОШИБОК */
+
+
+            /**Собираем данные из формы */
+            const formData = new FormData(form);//во внутрь помещаем ту форму, из которой нужно собрать данные
+            /**ВСЕГДА НУЖНО ПРОВЕРЯТЬ АТРИБУТ NAME У ИНПУТОВ, ИНАЧЕ ВСЕ ПОЙДЕТ ПО ПИЗДЕ!!!! */
+
+
+            /*Отправляем на сервер */
+            request.send(formData);
+            //отслеживаем лоад
+            request.addEventListener('load', () => {
+                if (request.status === 200) {
+                    console.log(request.response);
+                    statusMessage.textContent = message.success; 
+                    form.reset();//очищаем форму после успешной отправки
+                    setTimeout(() => {
+                        statusMessage.remove();
+                    }, 2000);
+                } else {
+                    statusMessage.textContent = message.failure; 
+                }
+            });
+        });
+    }
 });

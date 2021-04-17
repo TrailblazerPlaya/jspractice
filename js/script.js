@@ -306,17 +306,25 @@ window.addEventListener('DOMContentLoaded', () => {
             request.open('POST', 'server.php');//сначала всегда вызывается метод open, чтобы настроить этот запрос. во внутрь помещаем нужные данные
 
             /**Заголовки, которые будут говорить серверу что именно приходит */
-            // request.setRequestHeader('Content-type', 'multipart/form-data'); /*Если посмотреть на документацию FormData, там требуется эта multipart/form-data */
+            request.setRequestHeader('Content-type', 'application/json'); /*Если посмотреть на документацию FormData, там требуется эта multipart/form-data */
             /*КОГДА МЫ ИСПОЛЬЗУЕМ СВЯЗКУ XMLHTTPREQUEST С FORMDATA НАМ ЗАГОЛОВОК УСТАНАВЛИВАТЬ НЕ НУЖНО, ОН УСТАНАВЛИВАЕТСЯ АВТОМАТИЧЕСКИ!!!!!! ЗАПОМНИТЬ, ИНАЧЕ БУДЕТ МНОГО ОШИБОК */
+            /*С JSON ЗАГОЛОВОК НУЖЕН */
 
+           
 
             /**Собираем данные из формы */
             const formData = new FormData(form);//во внутрь помещаем ту форму, из которой нужно собрать данные
             /**ВСЕГДА НУЖНО ПРОВЕРЯТЬ АТРИБУТ NAME У ИНПУТОВ, ИНАЧЕ ВСЕ ПОЙДЕТ ПО ПИЗДЕ!!!! */
 
+            const obj = {};
+            formData.forEach(function(value, key){
+                obj[key] = value;
+            });
+
+            const json = JSON.stringify(obj);
 
             /*Отправляем на сервер */
-            request.send(formData);
+            request.send(json);
             //отслеживаем лоад
             request.addEventListener('load', () => {
                 if (request.status === 200) {

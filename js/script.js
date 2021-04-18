@@ -304,12 +304,13 @@ window.addEventListener('DOMContentLoaded', () => {
             `;  
             form.insertAdjacentElement('afterend', statusMessage);
 
+            
 
-            const request = new XMLHttpRequest();
-            request.open('POST', 'server.php');//сначала всегда вызывается метод open, чтобы настроить этот запрос. во внутрь помещаем нужные данные
+
+
 
             /**Заголовки, которые будут говорить серверу что именно приходит */
-            request.setRequestHeader('Content-type', 'application/json'); /*Если посмотреть на документацию FormData, там требуется эта multipart/form-data */
+            // request.setRequestHeader('Content-type', 'application/json'); /*Если посмотреть на документацию FormData, там требуется эта multipart/form-data */
             /*КОГДА МЫ ИСПОЛЬЗУЕМ СВЯЗКУ XMLHTTPREQUEST С FORMDATA НАМ ЗАГОЛОВОК УСТАНАВЛИВАТЬ НЕ НУЖНО, ОН УСТАНАВЛИВАЕТСЯ АВТОМАТИЧЕСКИ!!!!!! ЗАПОМНИТЬ, ИНАЧЕ БУДЕТ МНОГО ОШИБОК */
             /*С JSON ЗАГОЛОВОК НУЖЕН */
 
@@ -323,22 +324,37 @@ window.addEventListener('DOMContentLoaded', () => {
             formData.forEach(function(value, key){
                 obj[key] = value;
             });
-
-            const json = JSON.stringify(obj);
-
             /*Отправляем на сервер */
-            request.send(json);
-            //отслеживаем лоад
-            request.addEventListener('load', () => {
-                if (request.status === 200) {
-                    console.log(request.response);
-                    showThanksModal(message.success); //вызвал функцию вызова модального окна с благодарностью
-                    form.reset();//очищаем форму после успешной отправки
-                    statusMessage.remove();     
-                } else {
-                    showThanksModal(message.failure); 
-                }
+            //использую fetch
+            fetch('server.php', {
+                method:"POST",
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(obj)
+            })
+            .then(data => data.text())
+            .then(data => {
+                console.log(data);
+                showThanksModal(message.success); 
+                statusMessage.remove();
+            }).catch(() => {
+                showThanksModal(message.failure); 
+            }).finally(() => {
+                form.reset();
             });
+
+            //отслеживаем лоад
+            // request.addEventListener('load', () => {
+            //     if (request.status === 200) {
+            //         console.log(request.response);
+            //         showThanksModal(message.success); //вызвал функцию вызова модального окна с благодарностью
+            //         form.reset();//очищаем форму после успешной отправки
+            //         statusMessage.remove();     
+            //     } else {
+            //         showThanksModal(message.failure); 
+            //     }
+            // });
         });
     }
 
@@ -366,6 +382,24 @@ window.addEventListener('DOMContentLoaded', () => {
             prevModalDialog.classList.remove('hide');
             closeModal();
         }, 4000);
-
     }
+
+
+
+    /*API -  Application Programming Interface || Если говорить простым языком, то это набор данных и возможностей, которое предоставляет нам готовое решение */
+    //fetch api - встроенная в браузер арi, которая позволяет общаться с сервером и построена на promis
+    ////////////////////////////////////////////////////////
+    // fetch('https://jsonplaceholder.typicode.com/posts', {
+    //     method: "POST",
+    //     body: JSON.stringify({name:'Alex'}),
+    //     headers: {
+    //         'Content-type': 'application/json'
+    //     }
+    // })
+    // .then(response => response.json())
+    // .then(json => console.log(json));
+    ///////////////////////////////////////////////////////
+
+
+
 });

@@ -135,8 +135,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     /*Modal*////////////
     const modalTrigger = document.querySelectorAll('[data-modal]'),
-          modal = document.querySelector('.modal'),
-          modalClose = document.querySelector('[data-close]');
+          modal = document.querySelector('.modal');
+          //удалил константу крестика, хуй знает зачем, но вроде как она не работала на новом появившемся модальном окне благодарности
     //МЫ НЕ МОЖЕМ НА МАССИВ НАВЕСИТЬ ОБРАБОТЧИК СОБЫТИЯ!!!ЗАПОМНИТЬ!!!
     modalTrigger.forEach(btn => {
         btn.addEventListener('click', openModal);
@@ -167,12 +167,12 @@ window.addEventListener('DOMContentLoaded', () => {
          document.body.style.overflow = '';
     }
 
-    modalClose.addEventListener('click', closeModal);
+
     
     
     //Закрытие модального окна по подложке
     modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
+        if (e.target === modal || e.target.getAttribute('data-close') == '') {//теперь когда мы кликаем на подложку или на крестик у нас закрывается модальное окно
             closeModal();
         }
     });
@@ -184,7 +184,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    const modalTimerId = setTimeout(openModal, 5000);
+    const modalTimerId = setTimeout(openModal, 50000);
 
     function showModalByScroll() {
         if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
@@ -279,7 +279,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const forms = document.querySelectorAll('form');
 
     const message = {
-        loading: 'Загружается',
+        loading: 'img/form/spinner.svg',
         success: 'Спасибо, скоро свяжемся',
         failure: 'Что-то пошло не так'
     };
@@ -295,11 +295,14 @@ window.addEventListener('DOMContentLoaded', () => {
             e.preventDefault(); //Отменяю стандартное поведение браузера, так как после нажатия на кнопку с классом сабмит, страница перезагружается(стандартное поведение браузера)
 
             //Создам новую константу, чтобы выводить сообщение статуса
-            const statusMessage = document.createElement('div');
-            statusMessage.classList.add('status');
-            statusMessage.textContent = message.loading;  
-            form.append(statusMessage);
+            const statusMessage = document.createElement('img');
+            statusMessage.src = message.loading;
+            statusMessage.style.cssText = `
+                display: block;
+                margin: 0 auto;
 
+            `;  
+            form.insertAdjacentElement('afterend', statusMessage);
 
 
             const request = new XMLHttpRequest();
@@ -329,15 +332,40 @@ window.addEventListener('DOMContentLoaded', () => {
             request.addEventListener('load', () => {
                 if (request.status === 200) {
                     console.log(request.response);
-                    statusMessage.textContent = message.success; 
+                    showThanksModal(message.success); //вызвал функцию вызова модального окна с благодарностью
                     form.reset();//очищаем форму после успешной отправки
-                    setTimeout(() => {
-                        statusMessage.remove();
-                    }, 2000);
+                    statusMessage.remove();     
                 } else {
-                    statusMessage.textContent = message.failure; 
+                    showThanksModal(message.failure); 
                 }
             });
         });
+    }
+
+    function showThanksModal(message) {
+        const prevModalDialog = document.querySelector('.modal__dialog');
+
+        prevModalDialog.classList.add('hide');
+
+        openModal();
+        const thanksModal = document.createElement('div');
+        thanksModal.classList.add('modal__dialog');//добавил новое модальное окно
+        thanksModal.innerHTML = `
+            <div class="modal__content">
+                <div class="modal__close" data-close>×</div>
+                <div class="modal__title">${message}</div>
+            </div>
+        `;
+
+        document.querySelector('.modal').append(thanksModal);//добавил короче эллемент на страницу, все должно быть нормально(сука я уже путаюсь, слишком много всего. нужна практика)
+
+        /*Надо сделать так, чтобы если вдруг пользователь захочет открыть первое модальное окно, удалялось окно с благодарностью и возвращалось первое */
+        setTimeout(() => {
+            thanksModal.remove();//то есть через 4 секунды мы будем удалять окно благодарности
+            prevModalDialog.classList.add('show');
+            prevModalDialog.classList.remove('hide');
+            closeModal();
+        }, 4000);
+
     }
 });

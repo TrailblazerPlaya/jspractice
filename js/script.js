@@ -77,7 +77,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
     /*Timer*////////////
-    const deadline = '2021-04-18';
+    const deadline = '2021-04-28';
 
     function getTimeRemaining(endtime) {
         const t = Date.parse(endtime) - Date.parse(new Date()),
@@ -401,5 +401,7 @@ window.addEventListener('DOMContentLoaded', () => {
     ///////////////////////////////////////////////////////
 
 
-
+    fetch('http://localhost:3000/menu')
+        .then(data => data.json())
+        .then(res => console.log(res));
 });

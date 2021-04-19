@@ -1,0 +1,22 @@
+{
+  "name": "fooddist",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fornara/jspractice.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fornara/jspractice/issues"
+  },
+  "homepage": "https://github.com/fornara/jspractice#readme",
+  "description": "",
+  "devDependencies": {
+    "json-server": "^0.16.3"
+  }
+}

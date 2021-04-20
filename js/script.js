@@ -265,10 +265,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 
-
-
-
-
     //теперь старый код создания не нужен, все берется из бд    
 
     /*Forms*////////////
@@ -397,5 +393,62 @@ window.addEventListener('DOMContentLoaded', () => {
     fetch('http://localhost:3000/menu')
         .then(data => data.json())
         .then(res => console.log(res));
+
+
+
+
+    
+    /*Slider*////////////
+    const slides = document.querySelectorAll('.offer__slide'),
+          prev = document.querySelector('.offer__slider-prev'),
+          next = document.querySelector('.offer__slider-next'),
+          total = document.querySelector('#total'),
+          current = document.querySelector('#current');
+
+    let slideIndex = 1;
+
+    //в конце устанавливаем начальное значение
+    showSlide(slideIndex);
+
+    //тотал кол-во слайдов помещать внутрь функции не стоит, так как при скроле слайдов всегда будет проверяться тотал кол-во слайдов и все будет мигать
+    if (slides.length > 10) {
+        total.textContent = `0${slides.length}`;
+    } else {
+        total.textContent = slides.length;
+    }
+
+
+    function showSlide(n) {
+        if (n > slides.length) {
+            slideIndex = 1;
+        }
+
+        if (n < 1) {
+            slideIndex = slides.length;
+        }
+
+        slides.forEach(item => item.style.display = 'none');//скрыл все слайды
+
+        slides[slideIndex - 1].style.display = 'block';
+
+        if (slides.length > 10) {
+            current.textContent = `0${slideIndex}`;
+        } else {
+            current.textContent = slideIndex;
+        }
+    }
+
+    function plusSlides(n) {
+        showSlide(slideIndex += n);
+    }
+
+
+    prev.addEventListener('click', () => {
+        plusSlides(-1);
+    });
+
+    next.addEventListener('click', () => {
+        plusSlides(1);
+    });
 });
 //npx json-server --watch db.json

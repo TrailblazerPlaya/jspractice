@@ -238,41 +238,23 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    //////Тоже правильный варик///
-    //const div = new MenuCard();/
-    //div.render();           //// 
-    //////////////////////////////
+    //ПОЛУЧАЕМ ДАННЫЕ ИЗ БАЗЫ ДАННЫХ И ПОСТИМ КАРТОЧКИ НА САЙТЕ
+    const gerResource = async (url) => {//объекта с настройками(data) уже не будет, так как я ничего не отправляю на сервер, я просто получаю
+        const res = await fetch(url);//нужно помнить, что fetch если столкнется с какой-то ошибкой в http запросе, не выдаст catch(фэил окно)(404, 505 и тд), ошибкой для него является только отсутствие интернета и это нужно исправить руками 
+        if (!res.ok) {//короче это штука работает с промисами, полученными из фетча(если все ок, то все ок, а если не ок, то не ок)
+            throw new Error(`Could not ferch ${url}, status: ${res.status}`);//выкидываем новую ошибку
+        }  
+        return await res.json();
+    };
 
-    new MenuCard(
-        "img/tabs/vegy.jpg",
-        "vegy",
-        "Меню 'Фитнес'",
-        "Меню 'Фитнес' - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!",
-        10,
-        '.menu .container'
-    ).render();//можно не создавать константу, если в будущем объект вызван не будет, он просто потеряется
+    gerResource('http://localhost:3000/menu')
+        .then(data => {
+            data.forEach(({img, altimg, title, descr, price}) => {//инфа возвращается в виде массивов(то есть все карточки там у нас в виде массивов в бд) || так же используется диструктуризация, то есть элементы массива вытаскиваются, иначе я бы писал в менюкад obj.img, obj.altimg и тд, это не удобно
+                new MenuCard(img, altimg, title, descr, price, '.menu .container').render();//этот конструктор будет создаваться столько раз, сколько у меня будет объектов внутри массива, который придет из сервера 
+            });
+        });
 
-
-    new MenuCard(
-        "img/tabs/elite.jpg",
-        "elite",
-        "Меню “Премиум”",
-        "В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!",
-        15,
-        '.menu .container',
-        'menu__item'
-    ).render();
-
-    new MenuCard(
-        "img/tabs/post.jpg",
-        "post",
-        "Меню 'Постное'",
-        ">Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.",
-        25,
-        '.menu .container',
-        'menu__item'
-    ).render();
-
+    //теперь старый код создания не нужен, все берется из бд    
 
     /*Forms*////////////
     
@@ -284,13 +266,23 @@ window.addEventListener('DOMContentLoaded', () => {
         failure: 'Что-то пошло не так'
     };
 
-    //Подвязываем формы к функции postData
+    //Подвязываем формы к функции bindPostData
     forms.forEach(item => {
-        postData(item);
+        bindPostData(item);
     });
 
+    const postData = async (url, data) => {//async для того, чтобы наша функция сначала получила ответ от сервера и потом все пошло поехало, иначе будет ошибка(хуй знает как я это запомню все)
+        const res = await fetch(url, {//await ставится перет теми операторами, которые нам необходимо дождаться
+            method:"POST",
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: data
+        });
+        return await res.json();//и тут тоже ждем
+    };
 
-    function postData(form) {
+    function bindPostData(form) {
         form.addEventListener('submit', (e) => {//submit работает тогда, когда мы пытаемся отправить какую-то форму
             e.preventDefault(); //Отменяю стандартное поведение браузера, так как после нажатия на кнопку с классом сабмит, страница перезагружается(стандартное поведение браузера)
 
@@ -304,36 +296,22 @@ window.addEventListener('DOMContentLoaded', () => {
             `;  
             form.insertAdjacentElement('afterend', statusMessage);
 
-            
-
-
-
-
             /**Заголовки, которые будут говорить серверу что именно приходит */
             // request.setRequestHeader('Content-type', 'application/json'); /*Если посмотреть на документацию FormData, там требуется эта multipart/form-data */
             /*КОГДА МЫ ИСПОЛЬЗУЕМ СВЯЗКУ XMLHTTPREQUEST С FORMDATA НАМ ЗАГОЛОВОК УСТАНАВЛИВАТЬ НЕ НУЖНО, ОН УСТАНАВЛИВАЕТСЯ АВТОМАТИЧЕСКИ!!!!!! ЗАПОМНИТЬ, ИНАЧЕ БУДЕТ МНОГО ОШИБОК */
             /*С JSON ЗАГОЛОВОК НУЖЕН */
 
            
-
             /**Собираем данные из формы */
             const formData = new FormData(form);//во внутрь помещаем ту форму, из которой нужно собрать данные
             /**ВСЕГДА НУЖНО ПРОВЕРЯТЬ АТРИБУТ NAME У ИНПУТОВ, ИНАЧЕ ВСЕ ПОЙДЕТ ПО ПИЗДЕ!!!! */
 
-            const obj = {};
-            formData.forEach(function(value, key){
-                obj[key] = value;
-            });
+            const json = JSON.stringify(Object.fromEntries(formData.entries()));//в общем это метод, который появился недавно, первым делом он превращает данные из формы в массив, а дальше превращает его опять в объект с помощью fromEntries
+            
             /*Отправляем на сервер */
             //использую fetch
-            fetch('server.php', {
-                method:"POST",
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(obj)
-            })
-            .then(data => data.text())
+            
+            postData('http://localhost:3000/requests', json)
             .then(data => {
                 console.log(data);
                 showThanksModal(message.success); 
@@ -405,3 +383,4 @@ window.addEventListener('DOMContentLoaded', () => {
         .then(data => data.json())
         .then(res => console.log(res));
 });
+//npx json-server --watch db.json

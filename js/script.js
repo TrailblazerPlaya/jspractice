@@ -403,52 +403,126 @@ window.addEventListener('DOMContentLoaded', () => {
           prev = document.querySelector('.offer__slider-prev'),
           next = document.querySelector('.offer__slider-next'),
           total = document.querySelector('#total'),
-          current = document.querySelector('#current');
+          current = document.querySelector('#current'),
+          slidesWrapper = document.querySelector('.offer__slider-wrapper'),
+          slidesField = document.querySelector('.offer_slider-inner'),
+          width = window.getComputedStyle(slidesWrapper).width;
+
 
     let slideIndex = 1;
+    let offset = 0;
 
-    //в конце устанавливаем начальное значение
-    showSlide(slideIndex);
-
-    //тотал кол-во слайдов помещать внутрь функции не стоит, так как при скроле слайдов всегда будет проверяться тотал кол-во слайдов и все будет мигать
-    if (slides.length > 10) {
+    if (slides.length < 10) {
         total.textContent = `0${slides.length}`;
+        current.textContent = `0${slideIndex}`;
     } else {
         total.textContent = slides.length;
+        current.textContent = slideIndex;
     }
 
+    slidesField.style.width = 100 * slides.length + '%';//крч тут мы задали ширину которая нужна ну да и короче там 400%
+    slidesField.style.display = 'flex';
+    slidesField.style.transition = '0.5s all';
 
-    function showSlide(n) {
-        if (n > slides.length) {
+    slidesWrapper.style.overflow = 'hidden';
+
+    slides.forEach(slide => {
+        slide.style.width = width;//крч ко всем слайдам одинаковую ширину
+    });
+
+    next.addEventListener('click', () => {
+        if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) {//изначально там значение "500px" или что-то такое, нужно сделать его числом и вырезать px с помощью slice
+            offset = 0;
+        } else {
+            offset += +width.slice(0, width.length - 2);
+        }
+
+
+        slidesField.style.transform = `translateX(-${offset}px)`;
+
+        if (slideIndex == slides.length) {
             slideIndex = 1;
+        } else {
+            slideIndex++;
         }
 
-        if (n < 1) {
-            slideIndex = slides.length;
-        }
-
-        slides.forEach(item => item.style.display = 'none');//скрыл все слайды
-
-        slides[slideIndex - 1].style.display = 'block';
-
-        if (slides.length > 10) {
+        if (slides.length < 10) {
             current.textContent = `0${slideIndex}`;
         } else {
             current.textContent = slideIndex;
         }
-    }
-
-    function plusSlides(n) {
-        showSlide(slideIndex += n);
-    }
-
+    });
 
     prev.addEventListener('click', () => {
-        plusSlides(-1);
+        if (offset == 0) {
+            offset = +width.slice(0, width.length - 2) * (slides.length - 1);
+        } else {
+            offset -= +width.slice(0, width.length - 2);
+        }
+
+
+        slidesField.style.transform = `translateX(-${offset}px)`;
+
+        if (slideIndex == 1) {
+            slideIndex = slides.length;
+        } else {
+            slideIndex--;
+        }
+
+        if (slides.length < 10) {
+            current.textContent =  `0${slideIndex}`;
+        } else {
+            current.textContent = slideIndex;
+        }
     });
 
-    next.addEventListener('click', () => {
-        plusSlides(1);
-    });
+
+
+
+
+
+    // //в конце устанавливаем начальное значение
+    // showSlide(slideIndex);
+
+    // //тотал кол-во слайдов помещать внутрь функции не стоит, так как при скроле слайдов всегда будет проверяться тотал кол-во слайдов и все будет мигать
+    // if (slides.length > 10) {
+    //     total.textContent = `0${slides.length}`;
+    // } else {
+    //     total.textContent = slides.length;
+    // }
+
+
+    // function showSlide(n) {
+    //     if (n > slides.length) {
+    //         slideIndex = 1;
+    //     }
+
+    //     if (n < 1) {
+    //         slideIndex = slides.length;
+    //     }
+
+    //     slides.forEach(item => item.style.display = 'none');//скрыл все слайды
+
+    //     slides[slideIndex - 1].style.display = 'block';
+
+    //     if (slides.length > 10) {
+    //         current.textContent = `0${slideIndex}`;
+    //     } else {
+    //         current.textContent = slideIndex;
+    //     }
+    // }
+
+    // function plusSlides(n) {
+    //     showSlide(slideIndex += n);
+    // }
+
+
+    // prev.addEventListener('click', () => {
+    //     plusSlides(-1);
+    // });
+
+    // next.addEventListener('click', () => {
+    //     plusSlides(1);
+    // });
 });
 //npx json-server --watch db.json

@@ -1,8 +1,8 @@
 window.addEventListener('DOMContentLoaded', () => {
-    /*Tabs*////////////
+    /*Tabs*/ ///////////
     const tabs = document.querySelectorAll('.tabheader__item'),
-          tabContent = document.querySelectorAll('.tabcontent'),
-          tabsParent = document.querySelector('.tabheader__items');
+        tabContent = document.querySelectorAll('.tabcontent'),
+        tabsParent = document.querySelector('.tabheader__items');
     /*Варик 1(без классов) */
     // function hideTabContent() {
     //     tabContent.forEach(item => {
@@ -68,7 +68,7 @@ window.addEventListener('DOMContentLoaded', () => {
             tabs.forEach((item, i) => {
                 if (target == item) {
                     hideTabContent();
-                    showTabContent(i); 
+                    showTabContent(i);
                 }
             });
         }
@@ -76,15 +76,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 
-    /*Timer*////////////
+    /*Timer*/ ///////////
     const deadline = '2021-04-28';
 
     function getTimeRemaining(endtime) {
         const t = Date.parse(endtime) - Date.parse(new Date()),
-              days = Math.floor(t / (1000 * 60 * 60 * 24)),
-              hours = Math.floor((t / (1000 * 60 * 60) % 24)),
-              minutes = Math.floor((t / 1000 / 60) % 60),
-              seconds = Math.floor((t / 1000) % 60);
+            days = Math.floor(t / (1000 * 60 * 60 * 24)),
+            hours = Math.floor((t / (1000 * 60 * 60) % 24)),
+            minutes = Math.floor((t / 1000 / 60) % 60),
+            seconds = Math.floor((t / 1000) % 60);
 
         return {
             'total': t,
@@ -92,9 +92,9 @@ window.addEventListener('DOMContentLoaded', () => {
             'hours': hours,
             'minutes': minutes,
             'seconds': seconds
-        };      
+        };
     }
-    
+
     function getZero(num) {
         if (num >= 0 && num < 10) {
             return `0${num}`;
@@ -106,42 +106,42 @@ window.addEventListener('DOMContentLoaded', () => {
 
     function setClock(selector, endtime) {
         const timer = document.querySelector(selector),
-              days = timer.querySelector('#days'),
-              hours= timer.querySelector('#hours'),
-              minutes = timer.querySelector('#minutes'),
-              seconds = timer.querySelector('#seconds'),
-              timeInterval = setInterval(updateClock, 1000);//обновляет часы каждую секунду
+            days = timer.querySelector('#days'),
+            hours = timer.querySelector('#hours'),
+            minutes = timer.querySelector('#minutes'),
+            seconds = timer.querySelector('#seconds'),
+            timeInterval = setInterval(updateClock, 1000); //обновляет часы каждую секунду
 
-        updateClock();//фикс бага с миганием таймера(он начинал работать только спустя секунду)       
+        updateClock(); //фикс бага с миганием таймера(он начинал работать только спустя секунду)       
 
         function updateClock() {
-            const t = getTimeRemaining(endtime);//таким образом получаем все значения, которые выведем на странице
+            const t = getTimeRemaining(endtime); //таким образом получаем все значения, которые выведем на странице
 
             days.innerHTML = getZero(t.days);
             hours.innerHTML = getZero(t.hours);
             minutes.innerHTML = getZero(t.minutes);
             seconds.innerHTML = getZero(t.seconds);
 
-            if (t.total <= 0) {//если время таймера вышло, то часы останавливаются 
+            if (t.total <= 0) { //если время таймера вышло, то часы останавливаются 
                 clearInterval(timeInterval);
             }
 
-        }      
+        }
     }
     setClock('.timer', deadline); //вызвали функцию и назначили селекторы
 
 
 
 
-    /*Modal*////////////
+    /*Modal*/ ///////////
     const modalTrigger = document.querySelectorAll('[data-modal]'),
-          modal = document.querySelector('.modal');
-          //удалил константу крестика, хуй знает зачем, но вроде как она не работала на новом появившемся модальном окне благодарности
+        modal = document.querySelector('.modal');
+    //удалил константу крестика, хуй знает зачем, но вроде как она не работала на новом появившемся модальном окне благодарности
     //МЫ НЕ МОЖЕМ НА МАССИВ НАВЕСИТЬ ОБРАБОТЧИК СОБЫТИЯ!!!ЗАПОМНИТЬ!!!
     modalTrigger.forEach(btn => {
         btn.addEventListener('click', openModal);
     });
-    
+
     function openModal() {
         //Вариант 1//
         modal.classList.add('show');
@@ -152,27 +152,27 @@ window.addEventListener('DOMContentLoaded', () => {
 
         document.body.style.overflow = 'hidden';
 
-        clearInterval(modalTimerId);//Если пользователь до таймера уже открывал модальное окно, чтобы не бесить его мы отчищаем функцию и она больше самостоятельно не появится
+        clearInterval(modalTimerId); //Если пользователь до таймера уже открывал модальное окно, чтобы не бесить его мы отчищаем функцию и она больше самостоятельно не появится
     }
 
 
     function closeModal() {
-         //Вариант 1//
-         modal.classList.add('hide');
-         modal.classList.remove('show');
- 
-         //Вариант 2//
-         // modal.classList.toggle('show');
- 
-         document.body.style.overflow = '';
+        //Вариант 1//
+        modal.classList.add('hide');
+        modal.classList.remove('show');
+
+        //Вариант 2//
+        // modal.classList.toggle('show');
+
+        document.body.style.overflow = '';
     }
 
 
-    
-    
+
+
     //Закрытие модального окна по подложке
     modal.addEventListener('click', (e) => {
-        if (e.target === modal || e.target.getAttribute('data-close') == '') {//теперь когда мы кликаем на подложку или на крестик у нас закрывается модальное окно
+        if (e.target === modal || e.target.getAttribute('data-close') == '') { //теперь когда мы кликаем на подложку или на крестик у нас закрывается модальное окно
             closeModal();
         }
     });
@@ -205,7 +205,7 @@ window.addEventListener('DOMContentLoaded', () => {
             this.title = title;
             this.descr = descr;
             this.price = price;
-            this.classes = classes;//не нужно забывать, что это рест оператор(массив)
+            this.classes = classes; //не нужно забывать, что это рест оператор(массив)
             this.parent = document.querySelector(parentSelector);
             this.transfer = 79;
             this.changeToRub();
@@ -234,16 +234,16 @@ window.addEventListener('DOMContentLoaded', () => {
                     <div class="menu__item-total"><span>${this.price}</span> руб/день</div>
                 </div>
             `;
-            this.parent.append(element);//поместили короче
+            this.parent.append(element); //поместили короче
         }
     }
 
     //ПОЛУЧАЕМ ДАННЫЕ ИЗ БАЗЫ ДАННЫХ И ПОСТИМ КАРТОЧКИ НА САЙТЕ
-    const gerResource = async (url) => {//объекта с настройками(data) уже не будет, так как я ничего не отправляю на сервер, я просто получаю
-        const res = await fetch(url);//нужно помнить, что fetch если столкнется с какой-то ошибкой в http запросе, не выдаст catch(фэил окно)(404, 505 и тд), ошибкой для него является только отсутствие интернета и это нужно исправить руками 
-        if (!res.ok) {//короче это штука работает с промисами, полученными из фетча(если все ок, то все ок, а если не ок, то не ок)
-            throw new Error(`Could not ferch ${url}, status: ${res.status}`);//выкидываем новую ошибку
-        }  
+    const gerResource = async (url) => { //объекта с настройками(data) уже не будет, так как я ничего не отправляю на сервер, я просто получаю
+        const res = await fetch(url); //нужно помнить, что fetch если столкнется с какой-то ошибкой в http запросе, не выдаст catch(фэил окно)(404, 505 и тд), ошибкой для него является только отсутствие интернета и это нужно исправить руками 
+        if (!res.ok) { //короче это штука работает с промисами, полученными из фетча(если все ок, то все ок, а если не ок, то не ок)
+            throw new Error(`Could not ferch ${url}, status: ${res.status}`); //выкидываем новую ошибку
+        }
         return await res.json();
     };
 
@@ -258,8 +258,14 @@ window.addEventListener('DOMContentLoaded', () => {
     //БИБЛИОТЕКА AXIOS
     axios.get('http://localhost:3000/menu')
         .then(data => {
-            data.data.forEach(({img, altimg, title, descr, price}) => {//инфа возвращается в виде массивов(то есть все карточки там у нас в виде массивов в бд) || так же используется диструктуризация, то есть элементы массива вытаскиваются, иначе я бы писал в менюкад obj.img, obj.altimg и тд, это не удобно
-                new MenuCard(img, altimg, title, descr, price, '.menu .container').render();//этот конструктор будет создаваться столько раз, сколько у меня будет объектов внутри массива, который придет из сервера 
+            data.data.forEach(({
+                img,
+                altimg,
+                title,
+                descr,
+                price
+            }) => { //инфа возвращается в виде массивов(то есть все карточки там у нас в виде массивов в бд) || так же используется диструктуризация, то есть элементы массива вытаскиваются, иначе я бы писал в менюкад obj.img, obj.altimg и тд, это не удобно
+                new MenuCard(img, altimg, title, descr, price, '.menu .container').render(); //этот конструктор будет создаваться столько раз, сколько у меня будет объектов внутри массива, который придет из сервера 
             });
         });
 
@@ -267,8 +273,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     //теперь старый код создания не нужен, все берется из бд    
 
-    /*Forms*////////////
-    
+    /*Forms*/ ///////////
+
     const forms = document.querySelectorAll('form');
 
     const message = {
@@ -282,19 +288,19 @@ window.addEventListener('DOMContentLoaded', () => {
         bindPostData(item);
     });
 
-    const postData = async (url, data) => {//async для того, чтобы наша функция сначала получила ответ от сервера и потом все пошло поехало, иначе будет ошибка(хуй знает как я это запомню все)
-        const res = await fetch(url, {//await ставится перет теми операторами, которые нам необходимо дождаться
-            method:"POST",
+    const postData = async (url, data) => { //async для того, чтобы наша функция сначала получила ответ от сервера и потом все пошло поехало, иначе будет ошибка(хуй знает как я это запомню все)
+        const res = await fetch(url, { //await ставится перет теми операторами, которые нам необходимо дождаться
+            method: "POST",
             headers: {
                 'Content-type': 'application/json'
             },
             body: data
         });
-        return await res.json();//и тут тоже ждем
+        return await res.json(); //и тут тоже ждем
     };
 
     function bindPostData(form) {
-        form.addEventListener('submit', (e) => {//submit работает тогда, когда мы пытаемся отправить какую-то форму
+        form.addEventListener('submit', (e) => { //submit работает тогда, когда мы пытаемся отправить какую-то форму
             e.preventDefault(); //Отменяю стандартное поведение браузера, так как после нажатия на кнопку с классом сабмит, страница перезагружается(стандартное поведение браузера)
 
             //Создам новую константу, чтобы выводить сообщение статуса
@@ -304,7 +310,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 display: block;
                 margin: 0 auto;
 
-            `;  
+            `;
             form.insertAdjacentElement('afterend', statusMessage);
 
             /**Заголовки, которые будут говорить серверу что именно приходит */
@@ -312,26 +318,26 @@ window.addEventListener('DOMContentLoaded', () => {
             /*КОГДА МЫ ИСПОЛЬЗУЕМ СВЯЗКУ XMLHTTPREQUEST С FORMDATA НАМ ЗАГОЛОВОК УСТАНАВЛИВАТЬ НЕ НУЖНО, ОН УСТАНАВЛИВАЕТСЯ АВТОМАТИЧЕСКИ!!!!!! ЗАПОМНИТЬ, ИНАЧЕ БУДЕТ МНОГО ОШИБОК */
             /*С JSON ЗАГОЛОВОК НУЖЕН */
 
-           
+
             /**Собираем данные из формы */
-            const formData = new FormData(form);//во внутрь помещаем ту форму, из которой нужно собрать данные
+            const formData = new FormData(form); //во внутрь помещаем ту форму, из которой нужно собрать данные
             /**ВСЕГДА НУЖНО ПРОВЕРЯТЬ АТРИБУТ NAME У ИНПУТОВ, ИНАЧЕ ВСЕ ПОЙДЕТ ПО ПИЗДЕ!!!! */
 
-            const json = JSON.stringify(Object.fromEntries(formData.entries()));//в общем это метод, который появился недавно, первым делом он превращает данные из формы в массив, а дальше превращает его опять в объект с помощью fromEntries
-            
+            const json = JSON.stringify(Object.fromEntries(formData.entries())); //в общем это метод, который появился недавно, первым делом он превращает данные из формы в массив, а дальше превращает его опять в объект с помощью fromEntries
+
             /*Отправляем на сервер */
             //использую fetch
-            
+
             postData('http://localhost:3000/requests', json)
-            .then(data => {
-                console.log(data);
-                showThanksModal(message.success); 
-                statusMessage.remove();
-            }).catch(() => {
-                showThanksModal(message.failure); 
-            }).finally(() => {
-                form.reset();
-            });
+                .then(data => {
+                    console.log(data);
+                    showThanksModal(message.success);
+                    statusMessage.remove();
+                }).catch(() => {
+                    showThanksModal(message.failure);
+                }).finally(() => {
+                    form.reset();
+                });
 
             //отслеживаем лоад
             // request.addEventListener('load', () => {
@@ -354,7 +360,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         openModal();
         const thanksModal = document.createElement('div');
-        thanksModal.classList.add('modal__dialog');//добавил новое модальное окно
+        thanksModal.classList.add('modal__dialog'); //добавил новое модальное окно
         thanksModal.innerHTML = `
             <div class="modal__content">
                 <div class="modal__close" data-close>×</div>
@@ -362,11 +368,11 @@ window.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
 
-        document.querySelector('.modal').append(thanksModal);//добавил короче эллемент на страницу, все должно быть нормально(сука я уже путаюсь, слишком много всего. нужна практика)
+        document.querySelector('.modal').append(thanksModal); //добавил короче эллемент на страницу, все должно быть нормально(сука я уже путаюсь, слишком много всего. нужна практика)
 
         /*Надо сделать так, чтобы если вдруг пользователь захочет открыть первое модальное окно, удалялось окно с благодарностью и возвращалось первое */
         setTimeout(() => {
-            thanksModal.remove();//то есть через 4 секунды мы будем удалять окно благодарности
+            thanksModal.remove(); //то есть через 4 секунды мы будем удалять окно благодарности
             prevModalDialog.classList.add('show');
             prevModalDialog.classList.remove('hide');
             closeModal();
@@ -397,21 +403,21 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 
-    
-    /*Slider*////////////
-    const slides = document.querySelectorAll('.offer__slide'),
-          slider = document.querySelector('.offer__slider'),
-          prev = document.querySelector('.offer__slider-prev'),
-          next = document.querySelector('.offer__slider-next'),
-          total = document.querySelector('#total'),
-          current = document.querySelector('#current'),
-          slidesWrapper = document.querySelector('.offer__slider-wrapper'),
-          slidesField = document.querySelector('.offer_slider-inner'),
-          width = window.getComputedStyle(slidesWrapper).width;
 
-
+    /*Slider*/ ///////////
     let slideIndex = 1;
     let offset = 0;
+
+    const slides = document.querySelectorAll('.offer__slide'),
+        slider = document.querySelector('.offer__slider'),
+        prev = document.querySelector('.offer__slider-prev'),
+        next = document.querySelector('.offer__slider-next'),
+        total = document.querySelector('#total'),
+        current = document.querySelector('#current'),
+        slidesWrapper = document.querySelector('.offer__slider-wrapper'),
+        width = window.getComputedStyle(slidesWrapper).width,
+        slidesField = document.querySelector('.offer__slider-inner');
+
 
     if (slides.length < 10) {
         total.textContent = `0${slides.length}`;
@@ -421,18 +427,18 @@ window.addEventListener('DOMContentLoaded', () => {
         current.textContent = slideIndex;
     }
 
-    slidesField.style.width = 100 * slides.length + '%';//крч тут мы задали ширину которая нужна ну да и короче там 400%
+    slidesField.style.width = 100 * slides.length + '%'; //крч тут мы задали ширину которая нужна ну да и короче там 400%
     slidesField.style.display = 'flex';
     slidesField.style.transition = '0.5s all';
 
     slidesWrapper.style.overflow = 'hidden';
 
     slides.forEach(slide => {
-        slide.style.width = width;//крч ко всем слайдам одинаковую ширину
+        slide.style.width = width; //крч ко всем слайдам одинаковую ширину
     });
 
     slider.style.position = 'relative';
-    
+
     function slidenav() {
         dots.forEach(dot => dot.style.opacity = '.5');
         dots[slideIndex - 1].style.opacity = 1;
@@ -440,7 +446,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
     const indicators = document.createElement('ol'),
-          dots = [];
+        dots = [];
     indicators.classList.add('carousel-indicators');
     indicators.style.cssText = `
         position: absolute;
@@ -459,7 +465,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     for (let i = 0; i < slides.length; i++) {
         const dot = document.createElement('li');
-        dot.getAttribute('data-slide-to', i + 1);
+        dot.setAttribute('data-slide-to', i + 1);
         dot.style.cssText = `
             box-sizing: content-box;
             flex: 0 1 auto;
@@ -484,7 +490,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
     next.addEventListener('click', () => {
-        if (offset == +width.replace(/\D/g, "") * (slides.length - 1)) {//изначально там значение "500px" или что-то такое, нужно сделать его числом и вырезать px с помощью slice
+        if (offset == +width.replace(/\D/g, "") * (slides.length - 1)) { //изначально там значение "500px" или что-то такое, нужно сделать его числом и вырезать px с помощью slice
             offset = 0;
         } else {
             offset += +width.replace(/\D/g, "");
@@ -505,10 +511,6 @@ window.addEventListener('DOMContentLoaded', () => {
             current.textContent = slideIndex;
         }
 
-
-        ///
-        // dots.forEach(dot => dot.style.opacity = '.5');
-        // dots[slideIndex - 1].style.opacity = 1;
         slidenav();
     });
 
@@ -529,87 +531,133 @@ window.addEventListener('DOMContentLoaded', () => {
         }
 
         if (slides.length < 10) {
-            current.textContent =  `0${slideIndex}`;
+            current.textContent = `0${slideIndex}`;
         } else {
             current.textContent = slideIndex;
         }
 
-        // dots.forEach(dot => dot.style.opacity = '.5');
-        // dots[slideIndex - 1].style.opacity = 1;
         slidenav();
     });
 
+    dots.forEach(dot => {
+        dot.addEventListener('click', (e) => {
+            const slideTo = e.target.getAttribute('data-slide-to');
+            slideIndex = slideTo;
+            offset = +width.replace(/\D/g, "") * (slideTo - 1);
+
+            slidesField.style.transform = `translateX(-${offset}px)`;
+
+            if (slides.length < 10) {
+                current.textContent = `0${slideIndex}`;
+            } else {
+                current.textContent = slideIndex;
+            }
+
+            slidenav(); //не работает))___)))
 
 
+        });
+    });
+
+    /*Calc*/ ///////////
+    const result = document.querySelector('.calculating__result span');
+    let sex, height, weight, age, ratio;
+
+    if (localStorage.getItem('sex')) {
+        sex = localStorage.getItem('sex');
+    } else {
+        sex = 'female';
+        localStorage.setItem('sex', 'female');
+    }
+    if (localStorage.getItem('ratio')) {
+        ratio = localStorage.getItem('ratio');
+    } else {
+        ratio = 1.375;
+        localStorage.setItem('ratio', 1.375);
+    }
+
+    function calcTotal() {
+        if (!sex || !height || !weight || !age || !ratio) {
+            result.textContent = '____';
+            return; //если чего-то не будет, то функция увидит return и дальше ничо работать не будет(вроде да)
+        }
+
+        if (sex === 'female') {
+            result.textContent = Math.round((447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age)) * ratio);
+        } else {
+            result.textContent = Math.round((88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age)) * ratio);
+        }
+    }
+    calcTotal();
+
+    function initLocalSettings(selector, activeClass) {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(elem => {
+            elem.classList.remove(activeClass);
+            if (elem.getAttribute('id') === localStorage.getItem('sex')) {
+                elem.classList.add(activeClass);
+            }
+            if (elem.getAttribute('data-ratio') === localStorage.getItem('ratio')) {
+                elem.classList.add(activeClass);
+            }
+        });
+    }
+    initLocalSettings('#gender div', 'calculating__choose-item_active');
+    initLocalSettings('.calculating__choose_big div', 'calculating__choose-item_active');
 
 
+    function getStaticInformation(selector, activeClass) {
+        const elements = document.querySelectorAll(selector);
 
-    // //в конце устанавливаем начальное значение
-    // showSlide(slideIndex);
+        elements.forEach(elem => {
+            elem.addEventListener('click', (e) => {
+                if (e.target.getAttribute('data-ratio')) {
+                    ratio = +e.target.getAttribute('data-ratio');
+                    localStorage.setItem('ratio', +e.target.getAttribute('data-ratio'));
+                } else {
+                    sex = e.target.getAttribute('id');
+                    localStorage.setItem('sex', e.target.getAttribute('id'));
+                }
+    
+                elements.forEach(elem => {
+                    elem.classList.remove(activeClass);
+                });
+    
+                e.target.classList.add(activeClass);
+    
+                calcTotal();
+            });
+        });
+    }
 
-    // //тотал кол-во слайдов помещать внутрь функции не стоит, так как при скроле слайдов всегда будет проверяться тотал кол-во слайдов и все будет мигать
-    // if (slides.length > 10) {
-    //     total.textContent = `0${slides.length}`;
-    // } else {
-    //     total.textContent = slides.length;
-    // }
+    getStaticInformation('#gender div', 'calculating__choose-item_active');
+    getStaticInformation('.calculating__choose_big div', 'calculating__choose-item_active');
 
+    function getDynamicInformation(selector) {
+        const input = document.querySelector(selector);
 
-    // function showSlide(n) {
-    //     if (n > slides.length) {
-    //         slideIndex = 1;
-    //     }
-
-    //     if (n < 1) {
-    //         slideIndex = slides.length;
-    //     }
-
-    //     slides.forEach(item => item.style.display = 'none');//скрыл все слайды
-
-    //     slides[slideIndex - 1].style.display = 'block';
-
-    //     if (slides.length > 10) {
-    //         current.textContent = `0${slideIndex}`;
-    //     } else {
-    //         current.textContent = slideIndex;
-    //     }
-    // }
-
-    // function plusSlides(n) {
-    //     showSlide(slideIndex += n);
-    // }
-
-
-    // prev.addEventListener('click', () => {
-    //     plusSlides(-1);
-    // });
-
-    // next.addEventListener('click', () => {
-    //     plusSlides(1);
-    // });
-
-
-
-    // dots.forEach(dot => {
-    //     dot.addEventListener('click', (e) => {
-    //         const slideTo = e.target.getAttribute('data-slide-to');
-    //         slideIndex = slideTo;
-    //         offset = +width.replace(/\D/g, "") * (slideTo - 1);
-
-    //         slidesField.style.transform = `translateX(-${offset}px)`;
-
-    //         if (slides.length < 10) {
-    //             current.textContent =  `0${slideIndex}`;
-    //         } else {
-    //             current.textContent = slideIndex;
-    //         }
-
-    //         slidenav();//не работает))___)))
-
-            
-    //     });
-    // });
-
-
+        input.addEventListener('input', () => {
+            if (input.value.match(/\D/g)) {
+                input.style.border = "1px solid red";
+            } else {
+                input.style.border = 'none';
+            }
+            switch(input.getAttribute('id')) {
+                case "height":
+                    height = +input.value;
+                    break;
+                case "weight":
+                    weight = +input.value;
+                    break;
+                case "age":
+                    age = +input.value;
+                    break;
+            }
+            calcTotal();
+        });
+    }
+    getDynamicInformation('#height');
+    getDynamicInformation('#weight');
+    getDynamicInformation('#age');
 });
 //npx json-server --watch db.json

@@ -433,6 +433,12 @@ window.addEventListener('DOMContentLoaded', () => {
 
     slider.style.position = 'relative';
     
+    function slidenav() {
+        dots.forEach(dot => dot.style.opacity = '.5');
+        dots[slideIndex - 1].style.opacity = 1;
+    }
+
+
     const indicators = document.createElement('ol'),
           dots = [];
     indicators.classList.add('carousel-indicators');
@@ -478,10 +484,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
     next.addEventListener('click', () => {
-        if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) {//изначально там значение "500px" или что-то такое, нужно сделать его числом и вырезать px с помощью slice
+        if (offset == +width.replace(/\D/g, "") * (slides.length - 1)) {//изначально там значение "500px" или что-то такое, нужно сделать его числом и вырезать px с помощью slice
             offset = 0;
         } else {
-            offset += +width.slice(0, width.length - 2);
+            offset += +width.replace(/\D/g, "");
         }
 
 
@@ -501,15 +507,16 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
         ///
-        dots.forEach(dot => dot.style.opacity = '.5');
-        dots[slideIndex - 1].style.opacity = 1;
+        // dots.forEach(dot => dot.style.opacity = '.5');
+        // dots[slideIndex - 1].style.opacity = 1;
+        slidenav();
     });
 
     prev.addEventListener('click', () => {
         if (offset == 0) {
-            offset = +width.slice(0, width.length - 2) * (slides.length - 1);
+            offset = +width.replace(/\D/g, "") * (slides.length - 1);
         } else {
-            offset -= +width.slice(0, width.length - 2);
+            offset -= +width.replace(/\D/g, "");
         }
 
 
@@ -527,8 +534,9 @@ window.addEventListener('DOMContentLoaded', () => {
             current.textContent = slideIndex;
         }
 
-        dots.forEach(dot => dot.style.opacity = '.5');
-        dots[slideIndex - 1].style.opacity = 1;
+        // dots.forEach(dot => dot.style.opacity = '.5');
+        // dots[slideIndex - 1].style.opacity = 1;
+        slidenav();
     });
 
 
@@ -586,7 +594,7 @@ window.addEventListener('DOMContentLoaded', () => {
     //     dot.addEventListener('click', (e) => {
     //         const slideTo = e.target.getAttribute('data-slide-to');
     //         slideIndex = slideTo;
-    //         offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+    //         offset = +width.replace(/\D/g, "") * (slideTo - 1);
 
     //         slidesField.style.transform = `translateX(-${offset}px)`;
 
@@ -596,8 +604,7 @@ window.addEventListener('DOMContentLoaded', () => {
     //             current.textContent = slideIndex;
     //         }
 
-    //         dots.forEach(dot => dot.style.opacity = '.5');
-    //         dots[slideIndex - 1].style.opacity = 1;
+    //         slidenav();//не работает))___)))
 
             
     //     });
